@@ -1,12 +1,16 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-const DEFAULT_POST_ID = "1fda6830-1198-4c1f-8725-bfdbbd0f3f45";
+const DEFAULT_POST_IDS = [
+  "1fda6830-1198-4c1f-8725-bfdbbd0f3f45",
+  "885733f9-c065-4004-90a1-61ea1a380c23",
+  "7c995b1f-b068-43e6-8d0f-9281b20d02a5",
+];
 const API_BASE = "https://www.moltbook.com/api/v1";
 const MILESTONES = [10, 20, 30, 40, 50];
 
 const state = {
-  postId: DEFAULT_POST_ID,
+  postIds: [...DEFAULT_POST_IDS],
   mode: "3d",
   refreshTimer: null,
   starMeshes: [],
@@ -70,7 +74,7 @@ scene.add(starLayer);
 scene.add(lineLayer);
 
 initSceneDecor();
-setInitialPostId();
+setInitialPostIds();
 bindUI();
 resize();
 fetchAndRender();
@@ -78,11 +82,12 @@ animate();
 
 function bindUI() {
   refs.applyPostBtn.addEventListener("click", () => {
-    const raw = refs.postIdInput.value.trim();
-    if (!raw) {
+    const postIds = parsePostIds(refs.postIdInput.value);
+    if (!postIds.length) {
       return;
     }
-    state.postId = raw;
+    state.postIds = postIds;
+    refs.postIdInput.value = state.postIds.join(",");
     syncUrl();
     fetchAndRender();
   });
@@ -103,18 +108,35 @@ function bindUI() {
   window.addEventListener("resize", resize);
 }
 
-function setInitialPostId() {
+function parsePostIds(raw) {
+  return Array.from(
+    new Set(
+      String(raw || "")
+        .split(/[\s,]+/)
+        .map((item) => item.trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
+function setInitialPostIds() {
   const url = new URL(window.location.href);
-  const idFromQuery = url.searchParams.get("postId");
-  if (idFromQuery) {
-    state.postId = idFromQuery;
+  const idsFromQuery = parsePostIds(url.searchParams.get("postIds"));
+  const oneFromQuery = parsePostIds(url.searchParams.get("postId"));
+
+  if (idsFromQuery.length) {
+    state.postIds = idsFromQuery;
+  } else if (oneFromQuery.length) {
+    state.postIds = oneFromQuery;
   }
-  refs.postIdInput.value = state.postId;
+
+  refs.postIdInput.value = state.postIds.join(",");
 }
 
 function syncUrl() {
   const url = new URL(window.location.href);
-  url.searchParams.set("postId", state.postId);
+  url.searchParams.set("postIds", state.postIds.join(","));
+  url.searchParams.delete("postId");
   window.history.replaceState({}, "", url.toString());
 }
 
@@ -145,21 +167,46 @@ async function fetchAndRender() {
   refs.lastUpdated.textContent = "最后更新：获取中...";
 
   try {
-    const [postRes, commentsRes] = await Promise.all([
-      fetch(`${API_BASE}/posts/${state.postId}`),
-      fetch(`${API_BASE}/posts/${state.postId}/comments?sort=new`),
-    ]);
+    const postResults = await Promise.all(
+      state.postIds.map(async (postId) => {
+        const [postRes, commentsRes] = await Promise.all([
+          fetch(`${API_BASE}/posts/${postId}`),
+          fetch(`${API_BASE}/posts/${postId}/comments?sort=new`),
+        ]);
 
-    if (!postRes.ok || !commentsRes.ok) {
-      throw new Error(`HTTP ${postRes.status}/${commentsRes.status}`);
-    }
+        if (!postRes.ok || !commentsRes.ok) {
+          throw new Error(`HTTP ${postRes.status}/${commentsRes.status} @ ${postId}`);
+        }
 
-    const postJson = await postRes.json();
-    const commentsJson = await commentsRes.json();
-    const post = postJson.post || {};
-    const comments = flattenComments(commentsJson.comments || []);
+        const postJson = await postRes.json();
+        const commentsJson = await commentsRes.json();
 
-    const validEntries = comments
+        return {
+          postId,
+          post: postJson.post || {},
+          comments: flattenComments(commentsJson.comments || [], postId),
+        };
+      }),
+    );
+
+    const dedupComments = new Map();
+    const updatedAtMs = [];
+
+    postResults.forEach((item) => {
+      const updatedMs = new Date(item.post.updated_at || item.post.created_at || 0).getTime();
+      if (!Number.isNaN(updatedMs) && updatedMs > 0) {
+        updatedAtMs.push(updatedMs);
+      }
+
+      item.comments.forEach((comment) => {
+        const key = comment.id || `${comment.__sourcePostId}-${comment.created_at}-${comment.author?.name}`;
+        if (!dedupComments.has(key)) {
+          dedupComments.set(key, comment);
+        }
+      });
+    });
+
+    const validEntries = Array.from(dedupComments.values())
       .map((comment) => parseEntry(comment))
       .filter((entry) => entry !== null);
 
@@ -172,13 +219,13 @@ async function fetchAndRender() {
       languageCount: uniqueLanguages.size,
       countryCount: uniqueCountries.size,
       starCount: validEntries.length,
-      updatedAt: post.updated_at,
     });
 
     updateMilestones(uniqueLanguages.size);
     rebuildStars(validEntries);
 
-    refs.lastUpdated.textContent = `最后更新：${formatTime(post.updated_at || new Date().toISOString())}`;
+    const latestMs = updatedAtMs.length ? Math.max(...updatedAtMs) : Date.now();
+    refs.lastUpdated.textContent = `最后更新：${formatTime(new Date(latestMs).toISOString())} · 监控帖子 ${state.postIds.length}`;
 
     window.clearTimeout(state.refreshTimer);
     state.refreshTimer = window.setTimeout(fetchAndRender, 60_000);
@@ -189,11 +236,14 @@ async function fetchAndRender() {
   }
 }
 
-function flattenComments(comments) {
+function flattenComments(comments, sourcePostId) {
   const output = [];
 
   const walk = (comment) => {
-    output.push(comment);
+    output.push({
+      ...comment,
+      __sourcePostId: sourcePostId,
+    });
     if (Array.isArray(comment.replies)) {
       comment.replies.forEach(walk);
     }
@@ -225,7 +275,8 @@ function parseEntry(comment) {
   }
 
   return {
-    id: comment.id,
+    id: comment.id || `${comment.__sourcePostId}-${comment.created_at}`,
+    sourcePostId: comment.__sourcePostId,
     createdAt: comment.created_at,
     author: comment.author?.name || "unknown",
     content,
@@ -424,7 +475,7 @@ function buildConstellationLines() {
 }
 
 function buildDeterministicPosition(entry, index, total) {
-  const key = `${entry.languageKey}-${entry.countryKey}`;
+  const key = `${entry.languageKey}-${entry.countryKey}-${entry.id}`;
   const seed = hashString(key);
 
   const u = ((seed % 997) + 1) / 998;
@@ -486,8 +537,16 @@ function onPointerMove(event) {
   refs.starTooltip.innerHTML = [
     `<strong>${escapeHtml(entry.country)} | ${escapeHtml(entry.language)}</strong>`,
     `<div>by @${escapeHtml(entry.author)}</div>`,
+    `<div>post: ${escapeHtml(shortId(entry.sourcePostId))}</div>`,
     `<div>${escapeHtml(formatTime(entry.createdAt))}</div>`,
   ].join("");
+}
+
+function shortId(text) {
+  if (!text) {
+    return "--";
+  }
+  return `${text.slice(0, 8)}...`;
 }
 
 function escapeHtml(text) {

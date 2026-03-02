@@ -22,8 +22,9 @@ A dedicated home-folder workspace for rapidly building many independent web page
 - Default post id:
   - `1fda6830-1198-4c1f-8725-bfdbbd0f3f45`
 
-You can override post id by query param:
-- `.../star-map/?postId=<your_post_id>`
+You can override monitored posts by query params:
+- Single post: `.../star-map/?postId=<your_post_id>`
+- Multi-post aggregation: `.../star-map/?postIds=<id1>,<id2>,<id3>`
 
 ## Local dev
 ```bash
