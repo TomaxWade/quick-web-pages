@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Love Star Map</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="layout">
+      <section class="status-card">
+        <div class="status-top">
+          <h1>World Love Star Map</h1>
+          <p>给她的世界星图 · 实时进度</p>
+        </div>
+
+        <div class="controls" role="group" aria-label="star-map controls">
+          <label class="control-field">
+            <span>帖子 ID</span>
+            <input id="postIdInput" type="text" value="1fda6830-1198-4c1f-8725-bfdbbd0f3f45" />
+          </label>
+          <button id="applyPostBtn" class="btn" type="button">切换帖子</button>
+          <button id="toggleModeBtn" class="btn" type="button" aria-label="switch 2d 3d">切到 2D</button>
+          <button id="refreshBtn" class="btn" type="button">立即刷新</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-tile">
+            <h2>有效语言</h2>
+            <strong id="langCount">0</strong>
+            <small>/ 50</small>
+            <div class="bar"><i id="langBar"></i></div>
+          </article>
+          <article class="stat-tile">
+            <h2>有效国家</h2>
+            <strong id="countryCount">0</strong>
+            <small>/ 50</small>
+            <div class="bar"><i id="countryBar"></i></div>
+          </article>
+          <article class="stat-tile">
+            <h2>有效星点</h2>
+            <strong id="starCount">0</strong>
+            <small>comments</small>
+            <div class="bar"><i id="starBar"></i></div>
+          </article>
+        </div>
+
+        <ol class="milestones" id="milestones"></ol>
+
+        <div class="meta-row">
+          <span id="nextTarget">下一里程碑：10 语言</span>
+          <span id="lastUpdated">最后更新：--</span>
+        </div>
+
+        <p class="tip">拖拽可旋转/平移，滚轮缩放。点击星点可查看来源信息。</p>
+      </section>
+
+      <section class="map-card">
+        <div id="canvasWrap" class="canvas-wrap" aria-label="interactive love star map"></div>
+        <div id="starTooltip" class="star-tooltip" hidden></div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

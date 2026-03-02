@@ -1,0 +1,244 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap");
+
+:root {
+  --bg-0: #050611;
+  --bg-1: #111534;
+  --line: rgba(255, 255, 255, 0.2);
+  --text: #f7f5ff;
+  --muted: #b8b8d4;
+  --rose: #f8a8ef;
+  --sky: #8dc5ff;
+  --mint: #b9ffd9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Manrope", sans-serif;
+  background: var(--bg-0);
+  color: var(--text);
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(65vw 50vw at 10% 0%, rgba(248, 168, 239, 0.23), transparent 60%),
+    radial-gradient(70vw 60vw at 95% 15%, rgba(141, 197, 255, 0.2), transparent 60%),
+    linear-gradient(155deg, var(--bg-0), var(--bg-1));
+  z-index: 0;
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(300px, 430px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+
+.status-card,
+.map-card {
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(9, 11, 30, 0.6);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.status-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-top h1 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1;
+}
+
+.status-top p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.control-field {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.control-field input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font: inherit;
+}
+
+.btn {
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: rgba(248, 168, 239, 0.78);
+  background: linear-gradient(145deg, rgba(248, 168, 239, 0.25), rgba(255, 255, 255, 0.08));
+  transform: translateY(-1px);
+}
+
+.stats-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.stat-tile {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.stat-tile h2 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.stat-tile strong {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.stat-tile small {
+  margin-left: 8px;
+  color: var(--muted);
+}
+
+.bar {
+  margin-top: 10px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--rose), var(--sky));
+  transition: width 260ms ease;
+}
+
+.milestones {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.milestones li {
+  line-height: 1.4;
+}
+
+.milestones li.done {
+  color: var(--mint);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.tip {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.map-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-wrap {
+  width: 100%;
+  height: calc(100vh - 32px);
+  min-height: 450px;
+}
+
+.star-tooltip {
+  position: absolute;
+  max-width: 240px;
+  pointer-events: none;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(9, 13, 30, 0.88);
+  color: #fdfcff;
+  font-size: 12px;
+  line-height: 1.4;
+  transform: translate(10px, 10px);
+  z-index: 20;
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .canvas-wrap {
+    height: min(72vh, 620px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .bar i {
+    transition: none;
+  }
+}

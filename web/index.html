@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Web Pages Hub</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Cormorant+Garamond:wght@600;700&display=swap");
+      :root {
+        --bg0: #090a1a;
+        --bg1: #14173a;
+        --text: #f4f0ff;
+        --muted: #b6b8d6;
+        --accent: #f7a7ff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(1200px 600px at 15% 0%, rgba(247, 167, 255, 0.2), transparent 60%),
+          radial-gradient(900px 500px at 85% 10%, rgba(145, 185, 255, 0.18), transparent 65%),
+          linear-gradient(160deg, var(--bg0), var(--bg1));
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .panel {
+        width: min(900px, 100%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 28px;
+        padding: 28px;
+        background: rgba(11, 13, 35, 0.68);
+        backdrop-filter: blur(12px);
+      }
+      h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(36px, 5vw, 56px);
+        margin: 0 0 10px;
+      }
+      p { margin: 0 0 20px; color: var(--muted); line-height: 1.6; }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 14px;
+      }
+      a.card {
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 18px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.04);
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+      a.card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(247, 167, 255, 0.7);
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .card h2 { margin: 0 0 8px; font-size: 20px; }
+      .hint { color: var(--accent); font-size: 14px; margin-top: 18px; }
+    </style>
+  </head>
+  <body>
+    <main class="panel">
+      <h1>Quick Web Pages Hub</h1>
+      <p>用于快速创建可公开访问的独立网页。每个页面都在独立目录，互不影响。</p>
+      <section class="cards">
+        <a class="card" href="./star-map/">
+          <h2>World Love Star Map</h2>
+          <p>行为艺术挑战实时星图。支持 2D/3D 切换、拖拽视角、自动刷新进度。</p>
+        </a>
+      </section>
+      <p class="hint">部署后访问：/star-map/</p>
+    </main>
+  </body>
+</html>
