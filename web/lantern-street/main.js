@@ -24,6 +24,8 @@ let hasInteracted = false;
 let frameZoom = 1;
 let frameSwing = 0;
 let framePulse = 0;
+let userZoom = 1;
+let pinchDistancePrev = null;
 
 const sceneLabelMap = {
   riddle: "谜灯巷口",
@@ -53,6 +55,12 @@ const mod = (value, modulo) => {
 const randFrom = (seed) => {
   const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
   return x - Math.floor(x);
+};
+
+const getTouchDistance = (touchA, touchB) => {
+  const dx = touchA.clientX - touchB.clientX;
+  const dy = touchA.clientY - touchB.clientY;
+  return Math.hypot(dx, dy);
 };
 
 const resize = () => {
@@ -206,7 +214,7 @@ const project = (worldX, worldZ) => {
 
   const depth = (relZ - nearZ) / (farZ - nearZ);
   const nearFactor = 1 - depth;
-  const scale = (0.34 + nearFactor * 2.86) * frameZoom;
+  const scale = (0.34 + nearFactor * 2.86) * frameZoom * userZoom;
   const y = horizonY + Math.pow(nearFactor, 1.14) * height * 0.74;
   const x = width * 0.5 + frameSwing * 26 + worldX * scale * 92;
 
@@ -989,17 +997,42 @@ const onWheel = (event) => {
 };
 
 const onTouchStart = (event) => {
+  if (event.touches.length >= 2) {
+    pinchDistancePrev = getTouchDistance(event.touches[0], event.touches[1]);
+    hasInteracted = true;
+    hintText.textContent = "双指可缩放场景，上下滑动可漫游花街。";
+    return;
+  }
+
   if (event.touches.length < 1) {
     return;
   }
+
+  pinchDistancePrev = null;
   touchY = event.touches[0].clientY;
 };
 
 const onTouchMove = (event) => {
+  if (event.touches.length >= 2) {
+    event.preventDefault();
+    const currentDistance = getTouchDistance(event.touches[0], event.touches[1]);
+
+    if (pinchDistancePrev) {
+      const zoomRatio = currentDistance / pinchDistancePrev;
+      userZoom = clamp(userZoom * zoomRatio, 0.7, 1.9);
+    }
+
+    pinchDistancePrev = currentDistance;
+    hasInteracted = true;
+    hintText.textContent = "双指缩放中：可放大/缩小花街。";
+    return;
+  }
+
   if (event.touches.length < 1) {
     return;
   }
 
+  pinchDistancePrev = null;
   const y = event.touches[0].clientY;
   const delta = touchY - y;
   touchY = y;
@@ -1007,6 +1040,16 @@ const onTouchMove = (event) => {
   velocity += clamp(delta * 0.012, -0.8, 0.8);
   hasInteracted = true;
   hintText.textContent = "继续上下滑动可前后漫游花街。";
+};
+
+const onTouchEnd = (event) => {
+  if (event.touches.length < 2) {
+    pinchDistancePrev = null;
+  }
+
+  if (event.touches.length === 1) {
+    touchY = event.touches[0].clientY;
+  }
 };
 
 const onKeyDown = (event) => {
@@ -1053,7 +1096,9 @@ const init = () => {
   window.addEventListener("resize", resize);
   window.addEventListener("wheel", onWheel, { passive: false });
   window.addEventListener("touchstart", onTouchStart, { passive: true });
-  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: false });
+  window.addEventListener("touchend", onTouchEnd, { passive: true });
+  window.addEventListener("touchcancel", onTouchEnd, { passive: true });
   window.addEventListener("keydown", onKeyDown);
 
   requestAnimationFrame(tick);
