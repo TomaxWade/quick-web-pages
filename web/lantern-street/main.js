@@ -10,6 +10,7 @@ const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").mat
 const routeLength = 720;
 const farZ = 230;
 const nearZ = 1;
+const movementScale = 0.5;
 const baseSpeed = prefersReduced ? 0.14 : 0.25;
 
 let width = 0;
@@ -1032,7 +1033,7 @@ const tick = (now) => {
   frameZoom = 1 + (prefersReduced ? 0 : energy * 0.05 + Math.sin(now * 0.0011) * 0.012);
 
   const cameraSway = prefersReduced ? 0 : Math.sin(now * 0.00065) * 0.016;
-  const move = (baseSpeed + velocity + cameraSway) * dt * 0.92;
+  const move = (baseSpeed + velocity + cameraSway) * dt * 0.92 * movementScale;
   travel += move;
 
   draw(now);
