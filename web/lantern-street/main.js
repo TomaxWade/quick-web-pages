@@ -10,7 +10,7 @@ const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").mat
 const routeLength = 720;
 const farZ = 230;
 const nearZ = 1;
-const movementScale = 0.5;
+const movementScale = 0.25;
 const baseSpeed = prefersReduced ? 0.14 : 0.25;
 
 let width = 0;
