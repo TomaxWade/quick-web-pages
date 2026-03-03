@@ -14,6 +14,7 @@ A dedicated home-folder workspace for rapidly building many independent web page
 ## Current pages
 - `web/index.html` - entry hub
 - `web/star-map/index.html` - romantic interactive star-map for Moltbook challenge
+- `web/lantern-street/index.html` - immersive Lantern Festival endless flower street (2.5D)
 
 ## Star-map data source
 - Public API endpoint is read directly from the browser:
@@ -48,3 +49,4 @@ npm run build
 Published URL format:
 - `https://<github-user>.github.io/<repo>/`
 - Star map page: `https://<github-user>.github.io/<repo>/star-map/`
+- Lantern street page: `https://<github-user>.github.io/<repo>/lantern-street/`

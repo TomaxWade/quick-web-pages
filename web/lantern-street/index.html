@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>灯海长街 · 元宵夜行</title>
+    <meta
+      name="description"
+      content="极繁元宵花街 2.5D 沉浸网页：滚轮前后漫游，自动观看猜灯谜、赏花灯、舞龙、舞狮、踩高跷、扭秧歌、吃元宵。"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <canvas id="streetCanvas" aria-label="元宵花街沉浸场景"></canvas>
+    <div class="atmosphere"></div>
+    <div class="cinema-vignette"></div>
+    <div class="film-grain"></div>
+
+    <header class="title-panel">
+      <p class="kicker">上元夜 · 花街无尽</p>
+      <h1>灯海长街 · 元宵夜行</h1>
+      <p class="subtitle">
+        电影感夜游镜头下，鼠标滚轮前后漫游无尽花街：猜灯谜、赏花灯、舞龙舞狮、踩高跷、扭秧歌与热气腾腾的元宵小摊轮番上演。
+      </p>
+    </header>
+
+    <aside class="hud" aria-live="polite">
+      <div class="hud-row">
+        <span class="label">漫游速度</span>
+        <strong id="speedValue">平缓</strong>
+      </div>
+      <div class="hud-row">
+        <span class="label">当前街段</span>
+        <strong id="sceneValue">灯火初上</strong>
+      </div>
+      <p class="hint" id="hintText">滚轮向下前行，向上回退；移动端上下滑动可漫游。</p>
+    </aside>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

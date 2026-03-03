@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap");
+
+:root {
+  --ink: #fff4dd;
+  --muted: #f6dca8;
+  --gold: #f7c45c;
+  --amber: #ffb347;
+  --crimson: #8f1b1f;
+  --teal: #2f7f78;
+  --night-0: #090d19;
+  --night-1: #101529;
+  --night-2: #1f1836;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: "Noto Sans SC", sans-serif;
+  background: radial-gradient(circle at 20% -10%, #54275f 0%, transparent 42%),
+    radial-gradient(circle at 80% 0%, #6a3818 0%, transparent 38%),
+    radial-gradient(circle at 50% 90%, rgba(255, 149, 64, 0.14), transparent 64%),
+    linear-gradient(170deg, var(--night-0), var(--night-1) 44%, var(--night-2));
+}
+
+#streetCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(1200px 560px at 50% 95%, rgba(248, 169, 62, 0.24), transparent 72%),
+    radial-gradient(900px 420px at 46% 42%, rgba(255, 215, 130, 0.11), transparent 72%),
+    radial-gradient(1400px 520px at 50% -8%, rgba(255, 103, 48, 0.12), transparent 78%);
+  mix-blend-mode: screen;
+}
+
+.cinema-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, 0.48) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.36), rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 78%, rgba(0, 0, 0, 0.4));
+}
+
+.film-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12), transparent 50%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, rgba(255, 255, 255, 0) 1px 2px);
+}
+
+.title-panel {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  width: min(620px, calc(100vw - 36px));
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(255, 215, 135, 0.46);
+  border-radius: 18px;
+  background: linear-gradient(140deg, rgba(27, 17, 14, 0.72), rgba(40, 20, 22, 0.5));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 220, 149, 0.9);
+}
+
+h1 {
+  margin: 8px 0 10px;
+  font-family: "Ma Shan Zheng", cursive;
+  font-size: clamp(38px, 4.4vw, 62px);
+  line-height: 1.03;
+  color: #fff2cc;
+  text-shadow: 0 0 18px rgba(255, 157, 65, 0.42), 0 0 40px rgba(255, 130, 59, 0.2);
+}
+
+.subtitle {
+  margin: 0;
+  font-family: "Noto Serif SC", serif;
+  color: rgba(255, 234, 192, 0.95);
+  line-height: 1.62;
+  font-size: clamp(14px, 1.48vw, 17px);
+}
+
+.hud {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: min(380px, calc(100vw - 36px));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 210, 118, 0.48);
+  padding: 14px 14px 12px;
+  background: linear-gradient(140deg, rgba(19, 16, 21, 0.8), rgba(39, 19, 16, 0.58));
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.34);
+}
+
+.hud-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: rgba(255, 214, 141, 0.85);
+  letter-spacing: 0.08em;
+}
+
+.hud strong {
+  font-family: "Noto Serif SC", serif;
+  color: #ffe9bb;
+  font-size: 17px;
+}
+
+.hint {
+  margin: 8px 0 0;
+  color: rgba(255, 237, 205, 0.9);
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .title-panel {
+    top: 10px;
+    left: 10px;
+    width: calc(100vw - 20px);
+    padding: 14px;
+  }
+
+  h1 {
+    font-size: clamp(32px, 8.2vw, 46px);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    line-height: 1.52;
+  }
+
+  .hud {
+    right: 10px;
+    left: 10px;
+    width: auto;
+    bottom: 10px;
+    padding: 12px;
+  }
+
+  .film-grain {
+    opacity: 0.12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-panel,
+  .hud {
+    backdrop-filter: none;
+  }
+
+  .film-grain {
+    opacity: 0.08;
+  }
+}
