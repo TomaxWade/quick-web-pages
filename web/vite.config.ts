@@ -15,6 +15,7 @@ export default defineConfig({
         main: path.resolve(rootDir, "index.html"),
         starMap: path.resolve(rootDir, "star-map/index.html"),
         lanternStreet: path.resolve(rootDir, "lantern-street/index.html"),
+        medJobsBoard: path.resolve(rootDir, "med-jobs-board/index.html"),
       },
     },
   },

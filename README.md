@@ -15,6 +15,7 @@ A dedicated home-folder workspace for rapidly building many independent web page
 - `web/index.html` - entry hub
 - `web/star-map/index.html` - romantic interactive star-map for Moltbook challenge
 - `web/lantern-street/index.html` - immersive Lantern Festival endless flower street (2.5D)
+- `web/med-jobs-board/index.html` - 医药岗位每日新增看板（排序/筛选/多选复制/导出）
 
 ## Star-map data source
 - Public API endpoint is read directly from the browser:
@@ -50,3 +51,4 @@ Published URL format:
 - `https://<github-user>.github.io/<repo>/`
 - Star map page: `https://<github-user>.github.io/<repo>/star-map/`
 - Lantern street page: `https://<github-user>.github.io/<repo>/lantern-street/`
+- Medical jobs board: `https://<github-user>.github.io/<repo>/med-jobs-board/`

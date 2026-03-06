@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>医药岗位每日新增看板</title>
+    <link rel="stylesheet" href="https://unpkg.com/tabulator-tables@6.3.0/dist/css/tabulator.min.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div>
+          <h1>医药岗位每日新增看板</h1>
+          <p>支持多列排序、筛选、Ctrl+C 复制选中单元格、多单元格选择、导出 CSV/Excel。</p>
+          <p class="sub">字段重点：上架日期、是否未下架、岗位名称、可折叠岗位详情。</p>
+        </div>
+        <div class="meta">
+          <div>总行数：<strong id="total-count">0</strong></div>
+          <div>筛选后：<strong id="filtered-count">0</strong></div>
+          <div>更新时间：<strong id="updated-at">-</strong></div>
+        </div>
+      </header>
+
+      <section class="controls">
+        <label>
+          关键字
+          <input id="quick-search" type="text" placeholder="搜索岗位/公司/城市/详情" />
+        </label>
+        <label>
+          平台
+          <select id="platform-filter">
+            <option value="all">全部</option>
+          </select>
+        </label>
+        <label>
+          是否未下架
+          <select id="active-filter">
+            <option value="all">全部</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            <option value="未知">未知</option>
+          </select>
+        </label>
+        <label>
+          上架起始
+          <input id="date-from" type="date" />
+        </label>
+        <label>
+          上架截止
+          <input id="date-to" type="date" />
+        </label>
+        <div class="actions">
+          <button id="btn-reload" type="button">刷新数据</button>
+          <button id="btn-reset" type="button">清空筛选</button>
+          <button id="btn-export-csv" type="button">导出 CSV</button>
+          <button id="btn-export-xlsx" type="button">导出 Excel</button>
+        </div>
+      </section>
+
+      <section class="tips">
+        <span>提示：拖拽鼠标可多选单元格，按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 复制选中区域。</span>
+      </section>
+
+      <section class="table-wrap">
+        <div id="jobs-table"></div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.2/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/tabulator-tables@6.3.0/dist/js/tabulator.min.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
